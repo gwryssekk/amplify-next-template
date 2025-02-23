@@ -6,7 +6,7 @@ import type { Schema } from "../amplify/data/resource";
 const client = generateClient<Schema>({ authMode: 'userPool' });
 const { useAIConversation } = createAIHooks(client);
 
-export default function Chat() {
+export default function page() {
   const [
     {
       data: { messages },
