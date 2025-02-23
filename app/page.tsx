@@ -19,8 +19,7 @@ export default function page() {
   const { user, signOut } = useAuthenticator();
   return (
     <>
-        <p>Hello {user.username}</p>
-        <br />
+       <p>Hello {JSON.stringify(user)}</p>
         <p>
         <AIConversation
             messages={messages}
