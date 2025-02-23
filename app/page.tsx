@@ -46,7 +46,7 @@ export default function Page() {
           onChange={(e) => setDescription(e.target.value)}
           label="Description"
         />
-        <Button onClick={handleClick}>Generate recipe</Button>
+        <Button onClick={handleClick}>Generate Suggestion</Button>
       </Flex>
       {isLoading ? (
         <Loader variation="linear" />
