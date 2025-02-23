@@ -28,7 +28,7 @@ export default function page() {
             handleSendMessage={sendMessage}
             welcomeMessage = {
                 <Card variation="outlined">
-                   <Text>Hello.  I'd like to help you find the best career path for you.</Text>
+                   <Text>Hello.  I'd like to help you find the best career path for you. Please respond to my questions in the ugly text box below.  That cool with you?</Text>
                 </Card> }
         />
         </div>
