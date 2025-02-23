@@ -1,62 +1,73 @@
-"use client";
-import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
+'use client'
+import { Authenticator } from "@aws-amplify/ui-react";
+import { AIConversation } from '@aws-amplify/ui-react-ai';
+import { useAIConversation, useAIGeneration } from "./client";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import type { Schema } from "@/amplify/data/resource";
-import "./../app/app.css";
-import { Amplify } from "aws-amplify";
-import outputs from "@/amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
-
-Amplify.configure(outputs);
-
-const client = generateClient<Schema>();
-
-export default function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-
-  function listTodos() {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }
-
-  useEffect(() => {
-    listTodos();
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({
-      content: window.prompt("Todo content"),
-    });
-  }
-
+import {
+  Button,
+  Flex,
+  Heading,
+  Loader,
+  Text,
+  TextAreaField,
+  View,
+} from "@aws-amplify/ui-react";
+import React from "react";
+export default function Page() {
+  const [
+    {
+      data: { messages },
+      isLoading,
+    },
+    handleSendMessage,
+  ] = useAIConversation('chat');
+  // 'chat' is based on the key for the conversation route in your schema.
   const { signOut } = useAuthenticator();
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id })
-  }
+  const [description, setDescription] = React.useState("");
+  const [{ data, hasError }, generateRecipe] =
+    useAIGeneration("generateRecipe");
+
+  const handleClick = () => {
+    generateRecipe({ description });
+  };
 
   return (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          
-          <li 
-            key={todo.id}
-            onClick={() => deleteTodo(todo.id)}
-          >{todo.content} </li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/nextjs/start/quickstart/nextjs-app-router-client-components/">
-          Review next steps of this tutorial.
-        </a>
-      </div>
-      <button onClick={signOut}>Sign out</button>
-    </main>
+    <>
+      <AIConversation
+        messages={messages}
+        isLoading={isLoading}
+        handleSendMessage={handleSendMessage}
+      />
+       <Flex direction="column">
+      <Flex direction="row">
+        <TextAreaField
+          autoResize
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          label="Description"
+        />
+        <Button onClick={handleClick}>Generate recipe</Button>
+      </Flex>
+      {isLoading ? (
+        <Loader variation="linear" />
+      ) : (
+        <>
+          <Heading level={2}>{data?.name}</Heading>
+          <View as="ul">
+            {data?.ingredients?.map((ingredient) => (
+              <Text as="li" key={ingredient}>
+                {ingredient}
+              </Text>
+            ))}
+          </View>
+          <Text>{data?.instructions}</Text>
+        </>
+      )}
+    </Flex>
+      <br />
+    <button onClick={signOut}>Sign out</button>
+    
+    </>
   );
+
 }

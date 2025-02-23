@@ -12,6 +12,28 @@ const schema = a.schema({
       content: a.string(),
     })
     .authorization((allow) => [allow.owner()]),
+      
+  chat: a.conversation({
+    aiModel: a.ai.model('Claude 3.5 Haiku'),
+    systemPrompt: 'You are a helpful assistant that prompts the user with questions that will allow you to provide advice on the best career path.  The user is a high school student.',
+  })
+  .authorization((allow) => allow.owner()),
+    
+  generateRecipe: a.generation({
+    aiModel: a.ai.model('Claude 3.5 Haiku'),
+    systemPrompt: 'You are a helpful assistant that generates 3 career suggstions and provides a numerical ranking based on fit for each, with 100 being a perfect fit.',
+  })
+  .arguments({
+    description: a.string(),
+  })
+  .returns(
+    a.customType({
+      name: a.string(),
+      ingredients: a.string().array(),
+      instructions: a.string(),
+    })
+  )
+  .authorization((allow) => allow.authenticated()),
 });
 
 export type Schema = ClientSchema<typeof schema>;
