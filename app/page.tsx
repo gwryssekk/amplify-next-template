@@ -2,7 +2,7 @@
 import { generateClient } from "aws-amplify/data";
 import { createAIHooks, AIConversation } from '@aws-amplify/ui-react-ai';
 import type { Schema } from "../amplify/data/resource";
-import { useAuthenticator, Flex } from "@aws-amplify/ui-react";
+import { useAuthenticator, Flex, Card, Text } from "@aws-amplify/ui-react";
 
 const client = generateClient<Schema>({ authMode: 'userPool' });
 const { useAIConversation } = createAIHooks(client);
@@ -26,7 +26,10 @@ export default function page() {
         <AIConversation
             messages={messages}
             handleSendMessage={sendMessage}
-            
+            welcomeMessage = {
+                <Card variation="outlined">
+                   <Text>Hello.  I'd like to help you find the best career path for you.</Text>
+                </Card> }
         />
         </div>
         <br />
