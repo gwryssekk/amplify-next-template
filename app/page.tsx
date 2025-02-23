@@ -19,13 +19,14 @@ export default function page() {
   const { user, signOut } = useAuthenticator();
   return (
     <>
-       <p>Hello {JSON.stringify(user)}</p>
-        <p>
+       <p>Hello {user.signInDetails?.loginId}</p>
+        <div style={{ width: '50%' }}>
         <AIConversation
             messages={messages}
             handleSendMessage={sendMessage}
+            
         />
-        </p>
+        </div>
         <br />
         <p >
             <button onClick={signOut} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Sign Out</button>
