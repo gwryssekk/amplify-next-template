@@ -21,7 +21,6 @@ export default function page() {
   return (
     <View
       marginTop="large"
-      marginInLine="auto"
       marginLeft={{base: "50"}}
       maxWidth={{base:"1000", medium: "40vw"}}
       minWidth={{base:"300", medium: "40vw"}}
